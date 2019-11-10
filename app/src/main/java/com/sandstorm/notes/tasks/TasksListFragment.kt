@@ -1,6 +1,7 @@
 package com.sandstorm.notes.tasks
 
 
+import android.content.Context
 import android.os.Bundle
 
 import androidx.fragment.app.Fragment
@@ -12,13 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.sandstorm.notes.R
 import com.sandstorm.notes.models.Task
+import com.sandstorm.notes.models.Todo
 import kotlinx.android.synthetic.main.fragment_tasks_list.*
 
 
 class TasksListFragment : Fragment() {
+    lateinit var touchActionDelegate: TouchActionDelegate
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        context?.let {
+            if (it is TouchActionDelegate)
+                touchActionDelegate = it
+        }
     }
 
     override fun onCreateView(
@@ -32,15 +39,25 @@ class TasksListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TaskAdapter(mutableListOf(
-            Task(title = "Test task 1"),
-            Task(title = "Test task 2")
-        ))
+        val adapter = TaskAdapter(
+            mutableListOf(
+                Task(
+                    title = "Test task 1", todos = mutableListOf(
+                        Todo(description = "Test One!", isComplete = true),
+                        Todo(description = "Test two!")
+                    )
+                ),
+                Task(title = "Test task 2")
+            ), touchActionDelegate
+        )
         recyclerView.adapter = adapter
     }
 
     companion object {
         fun newInstance() = TasksListFragment()
-        }
+    }
 
+    interface TouchActionDelegate {
+        fun onAddButtonClicked(fragmentValue: String)
+    }
 }

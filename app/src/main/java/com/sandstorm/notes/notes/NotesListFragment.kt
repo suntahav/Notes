@@ -1,6 +1,7 @@
 package com.sandstorm.notes.notes
 
 
+import android.content.Context
 import android.os.Bundle
 
 import androidx.fragment.app.Fragment
@@ -16,10 +17,14 @@ import kotlinx.android.synthetic.main.fragment_notes_list.*
 
 
 class NotesListFragment : Fragment() {
+    lateinit var touchActionDelegate: TouchActionDelegate
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+        context?.let {
+            if (it is TouchActionDelegate)
+                touchActionDelegate = it
+        }
     }
 
     override fun onCreateView(
@@ -37,14 +42,18 @@ class NotesListFragment : Fragment() {
             mutableListOf(
                 Note(description = "Note 1 description"),
                 Note(description = "Note 2 description")
-            )
+            ),
+            touchActionDelegate
         )
         recyclerView.adapter = adapter
     }
+
     companion object {
-
         fun newInstance() = NotesListFragment()
+    }
 
+    interface TouchActionDelegate {
+        fun onAddButtonClicked(fragmentValue: String)
     }
 
 }
