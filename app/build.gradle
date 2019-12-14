@@ -1,3 +1,5 @@
+apply plugin: 'kotlin-kapt'
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -25,6 +27,11 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+   kapt{
+       arguments {
+           arg("toothpick_registry_package_name", "com.sandstorm.notes")
+       }
+   }
 }
 
 dependencies {
@@ -46,4 +53,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.github.stephanenicolas.toothpick:toothpick-runtime:1.1.3'
+    implementation 'com.github.stephanenicolas.toothpick:smoothie:1.1.3'
+    kapt 'com.github.stephanenicolas.toothpick:toothpick-compiler:1.1.3'
+    testImplementation 'com.github.stephanenicolas.toothpick:toothpick-testing:1.1.3'
 }
