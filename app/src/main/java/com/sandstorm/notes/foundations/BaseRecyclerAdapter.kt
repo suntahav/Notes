@@ -2,11 +2,15 @@ package com.sandstorm.notes.foundations
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.sandstorm.notes.tasks.TaskAdapter
 
 abstract class BaseRecyclerAdapter<T>(
     protected val masterlist: MutableList<T> = mutableListOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    fun updateList(list: List<T>) {
+        masterlist.clear()
+        masterlist.addAll(list)
+        notifyDataSetChanged()
+    }
 
     override fun getItemCount(): Int {
         return masterlist.size + 1
@@ -19,19 +23,18 @@ abstract class BaseRecyclerAdapter<T>(
             TYPE_INFO
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(holder is AddButtonViewHolder){
-            holder.onBind(Unit)
-        }
-        else {
-            (holder as BaseViewHolder<T>).onBind(masterlist[position-1])
+        if (holder is AddButtonViewHolder) {
+            holder.onBind(Unit, position - 1)
+        } else {
+            (holder as BaseViewHolder<T>).onBind(masterlist[position - 1], position - 1)
         }
     }
 
-    abstract class BaseViewHolder<E>(protected val view:View): RecyclerView.ViewHolder(view){
-        abstract fun onBind(data : E)
+    abstract class BaseViewHolder<E>(protected val view: View) : RecyclerView.ViewHolder(view) {
+        abstract fun onBind(data: E, listIndex: Int)
     }
 
-    abstract  class AddButtonViewHolder(view: View): BaseViewHolder<Unit>(view)
+    abstract class AddButtonViewHolder(view: View) : BaseViewHolder<Unit>(view)
 
     companion object {
         const val TYPE_ADD_BUTTON = 0

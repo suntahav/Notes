@@ -3,26 +3,23 @@ package com.sandstorm.notes.tasks
 
 import android.content.Context
 import android.os.Bundle
-
-import androidx.fragment.app.Fragment
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.sandstorm.notes.R
-import com.sandstorm.notes.models.Task
-import com.sandstorm.notes.models.Todo
-import kotlinx.android.synthetic.main.fragment_tasks_list.*
 
 
 class TasksListFragment : Fragment() {
     lateinit var touchActionDelegate: TouchActionDelegate
-    override fun onAttach(context: Context?) {
+    lateinit var viewModel: TaskViewModel
+    lateinit var contentView: TaskListView
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        context?.let {
+        context.let {
             if (it is TouchActionDelegate)
                 touchActionDelegate = it
         }
@@ -33,24 +30,26 @@ class TasksListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tasks_list, container, false)
+        return inflater.inflate(R.layout.fragment_tasks_list, container, false).apply {
+            contentView = this as TaskListView
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TaskAdapter(
-            mutableListOf(
-                Task(
-                    title = "Test task 1", todos = mutableListOf(
-                        Todo(description = "Test One!", isComplete = true),
-                        Todo(description = "Test two!")
-                    )
-                ),
-                Task(title = "Test task 2")
-            ), touchActionDelegate
-        )
-        recyclerView.adapter = adapter
+        bindViewModel()
+        setContentView()
+    }
+
+    private fun setContentView() {
+        contentView.initView(touchActionDelegate, viewModel)
+    }
+
+    private fun bindViewModel() {
+        viewModel = ViewModelProviders.of(this).get(TaskViewModel::class.java)
+        viewModel.taskListLiveData.observe(this, Observer { taskList ->
+            contentView.updateList(taskList)
+        })
     }
 
     companion object {

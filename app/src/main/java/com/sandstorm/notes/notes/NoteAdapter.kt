@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.view_add_button.view.*
 
 class NoteAdapter(
     noteList: MutableList<Note> = mutableListOf(),
-    val touchActionDelegate: NotesListFragment.TouchActionDelegate
+    val touchActionDelegate: NotesListFragment.TouchActionDelegate,
+    val dataActionDelegate: NoteListViewContract
 ) : BaseRecyclerAdapter<Note>(noteList) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_ADD_BUTTON) {
@@ -36,13 +37,13 @@ class NoteAdapter(
     }
 
     class NoteViewHolder(view: View) : BaseViewHolder<Note>(view) {
-        override fun onBind(data: Note) {
+        override fun onBind(data: Note, listIndex: Int) {
             (view as NoteView).initView(data)
         }
     }
 
     inner class AddButtonViewHolder(view: View) : BaseRecyclerAdapter.AddButtonViewHolder(view) {
-        override fun onBind(data: Unit) {
+        override fun onBind(data: Unit, listIndex: Int) {
             view.buttonText.text = view.context.getString(R.string.add_button_note)
 
             view.setOnClickListener {

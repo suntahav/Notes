@@ -17,16 +17,17 @@ class TaskView @JvmOverloads constructor(
     defStyleAttr: Int = 1
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    fun initView(task : Task){
+    fun initView(task: Task, todoCheckedCallback: (Int, Boolean) -> Unit) {
         descriptionTextView.text = task.title
 
-        task.todos.forEach { todo ->
+        task.todos.forEachIndexed { todoIndex, todo ->
             val todoView = (LayoutInflater.from(context)
                 .inflate(R.layout.view_todo, container, false) as TodoView).apply {
-                initView(todo) {
-                    if(isTaskComplete(task.todos)){
+                initView(todo) { isChecked ->
+                    todoCheckedCallback.invoke(todoIndex, isChecked)
+                    if (isTaskComplete(task.todos)) {
                         createStrikeThrough()
-                    }else{
+                    } else {
                         removeStrikeThrough()
                     }
                 }
@@ -35,7 +36,7 @@ class TaskView @JvmOverloads constructor(
         }
     }
 
-    private fun isTaskComplete(todos : List<Todo>) : Boolean = todos.none { !it.isComplete }
+    private fun isTaskComplete(todos: List<Todo>): Boolean = todos.none { !it.isComplete }
 
     private fun createStrikeThrough() {
         descriptionTextView.apply {

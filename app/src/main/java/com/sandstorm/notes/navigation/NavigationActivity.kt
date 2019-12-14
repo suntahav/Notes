@@ -2,10 +2,9 @@ package com.sandstorm.notes.navigation
 
 import android.content.Intent
 import android.os.Bundle
-
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sandstorm.notes.R
 import com.sandstorm.notes.create.CreateActivity
 import com.sandstorm.notes.notes.NotesListFragment
@@ -46,10 +45,10 @@ class NavigationActivity : AppCompatActivity(), TasksListFragment.TouchActionDel
             .commit()
     }
 
-    fun startCreateActivity(fragmentValue: String) {
+    private fun startCreateActivity(fragmentValue: String) {
         val intent = Intent(this, CreateActivity::class.java)
         startActivity(intent.apply {
-            putExtra(FRAGMENT_TYPE_KEY,fragmentValue)
+            putExtra(FRAGMENT_TYPE_KEY, fragmentValue)
         })
     }
 
@@ -57,7 +56,7 @@ class NavigationActivity : AppCompatActivity(), TasksListFragment.TouchActionDel
         startCreateActivity(fragmentValue)
     }
 
-    companion object{
+    companion object {
         const val FRAGMENT_TYPE_KEY = "f_t_k"
         const val FRAGMENT_VALUE_NOTE = "f_v_n"
         const val FRAGMENT_VALUE_TASK = "f_v_t"
