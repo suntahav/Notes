@@ -1,12 +1,14 @@
 package com.sandstorm.notes.tasks
 
+import android.util.Log
 import com.sandstorm.notes.models.Task
 import com.sandstorm.notes.models.Todo
 import javax.inject.Inject
 
 class TaskLocalModel @Inject constructor() : ITaskModel{
     override fun addTask(task: Task, callback: SuccessCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.d("MVVM Sample",task.toString())
+        callback.invoke(true)
     }
 
     override fun updateTask(task: Task, callback: SuccessCallback) {

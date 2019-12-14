@@ -27,11 +27,11 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-   kapt{
-       arguments {
-           arg("toothpick_registry_package_name", "com.sandstorm.notes")
-       }
-   }
+    kapt {
+        arguments {
+            arg("toothpick_registry_package_name", "com.sandstorm.notes")
+        }
+    }
 }
 
 dependencies {
